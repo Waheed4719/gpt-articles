@@ -22,7 +22,7 @@ interface ChatCompletionRequest extends CreateCompletionRequest {
 
 type MessageObjectType = {
   message: string
-  direction?:  "incoming" | "outgoing" | 0 | 1;
+  direction:  "incoming" | "outgoing" | 0 | 1;
   sender: 'ChatGPT' | 'user'
   position: 'normal' | 'first' | 'last' | 'only'
 }
