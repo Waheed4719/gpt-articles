@@ -98,6 +98,7 @@ const App = () => {
           message: response.choices[0].message.content as string,
           sender: 'ChatGPT',
           position: 'normal',
+          direction: 'incoming'
         },
       ])
       
