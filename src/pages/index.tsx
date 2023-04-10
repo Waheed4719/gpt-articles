@@ -1,7 +1,7 @@
 import { Quicksand } from 'next/font/google'
-import {CreateCompletionRequest} from "openai";
-import { useState } from "react";
-import "@chatscope/chat-ui-kit-styles/dist/default/styles.min.css";
+import { CreateCompletionRequest } from 'openai'
+import { useState } from 'react'
+import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css'
 import {
   MainContainer,
   ChatContainer,
@@ -9,150 +9,141 @@ import {
   Message,
   MessageInput,
   TypingIndicator,
-} from "@chatscope/chat-ui-kit-react";
+} from '@chatscope/chat-ui-kit-react'
 
 const quicksand = Quicksand({ subsets: ['latin'] })
 
 interface ChatCompletionRequest extends CreateCompletionRequest {
   messages: {
-    role: string;
-    content: string;
-  }[];
+    role: string
+    content: string
+  }[]
 }
 
 type MessageObjectType = {
-  message: string;
-  direction?: "incoming" | "outgoing";
-  sender: "ChatGPT" | "user";
+  message: string
+  direction?: 'incoming' | 'outgoing'
+  sender: 'ChatGPT' | 'user'
+  position: 'normal' | 'first' | 'last' | 'only'
 }
-
-const API_KEY = "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";
-// "Explain things like you would to a 10 year old learning how to code."
-const systemMessage = {
-  //  Explain things like you're talking to a software professional with 5 years of experience.
-  role: "system",
-  content:
-    "Act like a pirate for the entire duration of our conversation",
-};
 
 const App = () => {
   const [messages, setMessages] = useState<MessageObjectType[]>([
     {
       message: "Hello, I'm ChatGPT! Ask me anything!",
-      direction: "incoming",
-      sender: "ChatGPT",
+      direction: 'incoming',
+      sender: 'ChatGPT',
+      position: 'normal',
       // sentTime: "just now",
     },
-  ]);
-  const [systemMsg, setSystemMsg] = useState<{role: 'system', content: string}>({
-    //  Explain things like you're talking to a software professional with 5 years of experience.
-    role: "system",
+  ])
+  const [systemMsg, setSystemMsg] = useState<{
+    role: 'system'
+    content: string
+  }>({
+    role: 'system',
     content:
-      "Act like a pirate for the entire duration of our conversation",
+      "Explain things like you're talking to a medical professional with 5 years of experience.",
   })
-  const [isTyping, setIsTyping] = useState(false);
+  const [isTyping, setIsTyping] = useState(false)
 
   const handleSend = async (message: string) => {
     const newMessage: MessageObjectType = {
       message,
-      direction: "outgoing",
-      sender: "user",
-    };
+      direction: 'outgoing',
+      sender: 'user',
+      position: 'normal',
+    }
 
-    const newMessages = [...messages, newMessage];
+    const newMessages = [...messages, newMessage]
 
-    setMessages(newMessages);
+    setMessages(newMessages)
 
     // Initial system message to determine ChatGPT functionality
     // How it responds, how it talks, etc.
-    setIsTyping(true);
-    await processMessageToChatGPT(newMessages);
-  };
+    setIsTyping(true)
+    await processMessageToChatGPT(newMessages)
+    setIsTyping(false)
+  }
 
   async function processMessageToChatGPT(chatMessages: MessageObjectType[]) {
-    // messages is an array of messages
-    // Format messages for chatGPT API
-    // API is expecting objects in format of { role: "user" or "assistant", "content": "message here"}
-    // So we need to reformat
-
     const apiMessages = chatMessages.map((messageObject) => {
-      let role = "";
-      if (messageObject.sender === "ChatGPT") {
-        role = "assistant";
+      let role = ''
+      if (messageObject.sender === 'ChatGPT') {
+        role = 'assistant'
       } else {
-        role = "user";
+        role = 'user'
       }
-      return { role: role, content: messageObject.message };
-    });
+      return { role: role, content: messageObject.message }
+    })
 
-    // Get the request body set up with the model we plan to use
-    // and the messages which we formatted above. We add a system message in the front to'
-    // determine how we want chatGPT to act.
     const apiRequestBody: ChatCompletionRequest = {
-      model: "gpt-3.5-turbo",
+      model: 'gpt-3.5-turbo',
       messages: [
         systemMsg, // The system message DEFINES the logic of our chatGPT
         ...apiMessages, // The messages from our chat with ChatGPT
       ],
-    };
-
-    // await fetch("https://api.openai.com/v1/chat/completions", {
-    //   method: "POST",
-    //   headers: {
-    //     Authorization: "Bearer " + API_KEY,
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(apiRequestBody),
-    // })
-
-    await fetch("/api/chat", {
-      method: "POST",
-      headers: {
-        Authorization: "Bearer " + API_KEY,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(apiRequestBody),
-    })
-      .then((data: Response) => {
-        return data.json();
+    }
+    try{
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        body: JSON.stringify(apiRequestBody),
+      }).then((data: Response) => {
+        return data.json()
       })
-      .then((data) => {
-        console.log(data)
-        setMessages([
-          ...chatMessages,
-          {
-            message: data.choices[0].message.content as string,
-            sender: "ChatGPT",
-          },
-        ]);
-        setIsTyping(false);
-      });
+  
+      setMessages([
+        ...chatMessages,
+        {
+          message: response.choices[0].message.content as string,
+          sender: 'ChatGPT',
+          position: 'normal',
+        },
+      ])
+      
+    }catch(err){
+      console.log(err)
+    }
+    setIsTyping(false)
   }
 
   return (
-    <div className="w-screen h-screen p-[40px]">
-      <div className="relative h-full w-full">
-        <button type="button" onClick={()=>setSystemMsg({role: 'system', content: "talk like a teacher"})}>Change prompt</button>
-        <MainContainer className="pt-[20px] rounded-md" >
+    <div className='w-screen h-screen p-[40px]'>
+      <div className='relative h-full w-full'>
+        <button
+          type='button'
+          onClick={() =>
+            setSystemMsg({ role: 'system', content: 'talk like a teacher' })
+          }
+        >
+          Change prompt
+        </button>
+        <MainContainer className='pt-[20px] rounded-md'>
           <ChatContainer>
             <MessageList
-              scrollBehavior="smooth"
+              scrollBehavior='smooth'
               typingIndicator={
                 isTyping ? (
-                  <TypingIndicator content="ChatGPT is typing" />
+                  <TypingIndicator content='ChatGPT is typing' />
                 ) : null
               }
             >
               {messages.map((message, i) => {
-                return <Message key={i} model={message} className={`${quicksand.className}`}/>;
+                return (
+                  <Message
+                    key={message.message}
+                    model={message}
+                    className={`${quicksand.className}`}
+                  />
+                )
               })}
             </MessageList>
-            <MessageInput placeholder="Type message here" onSend={handleSend} />
+            <MessageInput placeholder='Type message here' onSend={handleSend} />
           </ChatContainer>
         </MainContainer>
       </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
