@@ -22,7 +22,7 @@ interface ChatCompletionRequest extends CreateCompletionRequest {
 
 type MessageObjectType = {
   message: string
-  direction?: 'incoming' | 'outgoing'
+  direction?:  "incoming" | "outgoing" | 0 | 1;
   sender: 'ChatGPT' | 'user'
   position: 'normal' | 'first' | 'last' | 'only'
 }
@@ -128,7 +128,7 @@ const App = () => {
                 ) : null
               }
             >
-              {messages.map((message, i) => {
+              {messages.map((message) => {
                 return (
                   <Message
                     key={message.message}
