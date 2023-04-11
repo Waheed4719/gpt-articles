@@ -17,11 +17,37 @@
 }
 
 body {
+  font-family: Quicksand, sans-serif;
   color: rgb(var(--foreground-rgb));
+  background-color: #444654;
   /* background: linear-gradient(
       to bottom,
       transparent,
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb)); */
+}
+
+.cs-main-container {
+  background-color: #444654 !important;
+  border: 1px solid transparent !important;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #444654;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #565869;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }

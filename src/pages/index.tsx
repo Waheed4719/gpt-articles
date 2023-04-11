@@ -1,17 +1,7 @@
-import { Quicksand } from 'next/font/google'
 import { CreateCompletionRequest } from 'openai'
 import { useState } from 'react'
-import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css'
-import {
-  MainContainer,
-  ChatContainer,
-  MessageList,
-  Message,
-  MessageInput,
-  TypingIndicator,
-} from '@chatscope/chat-ui-kit-react'
-
-const quicksand = Quicksand({ subsets: ['latin'] })
+import MessageList from '@/components/MessageList'
+import MessageInput from '@/components/MessageInput'
 
 interface ChatCompletionRequest extends CreateCompletionRequest {
   messages: {
@@ -22,7 +12,7 @@ interface ChatCompletionRequest extends CreateCompletionRequest {
 
 type MessageObjectType = {
   message: string
-  direction:  "incoming" | "outgoing" | 0 | 1;
+  direction: 'incoming' | 'outgoing' | 0 | 1
   sender: 'ChatGPT' | 'user'
   position: 'normal' | 'first' | 'last' | 'only'
 }
@@ -42,8 +32,8 @@ const App = () => {
     content: string
   }>({
     role: 'system',
-    content:
-      "Explain things like you're talking to a medical professional with 5 years of experience.",
+    content: 'Write a literature review on the text i send you',
+    // "Explain things like you're talking to a medical professional with 5 years of experience.",
   })
   const [isTyping, setIsTyping] = useState(false)
 
@@ -58,9 +48,6 @@ const App = () => {
     const newMessages = [...messages, newMessage]
 
     setMessages(newMessages)
-
-    // Initial system message to determine ChatGPT functionality
-    // How it responds, how it talks, etc.
     setIsTyping(true)
     await processMessageToChatGPT(newMessages)
     setIsTyping(false)
@@ -84,64 +71,48 @@ const App = () => {
         ...apiMessages, // The messages from our chat with ChatGPT
       ],
     }
-    try{
+    try {
       const response = await fetch('/api/chat', {
         method: 'POST',
         body: JSON.stringify(apiRequestBody),
       }).then((data: Response) => {
         return data.json()
       })
-  
+
       setMessages([
         ...chatMessages,
         {
           message: response.choices[0].message.content as string,
           sender: 'ChatGPT',
           position: 'normal',
-          direction: 'incoming'
+          direction: 'incoming',
         },
       ])
-      
-    }catch(err){
+    } catch (err) {
       console.log(err)
     }
     setIsTyping(false)
   }
 
   return (
-    <div className='w-screen h-screen p-[40px]'>
+    <div className='w-screen h-screen'>
       <div className='relative h-full w-full'>
-        <button
+        {/* <button
           type='button'
           onClick={() =>
             setSystemMsg({ role: 'system', content: 'talk like a teacher' })
           }
         >
           Change prompt
-        </button>
-        <MainContainer className='pt-[20px] rounded-md'>
-          <ChatContainer>
-            <MessageList
-              scrollBehavior='smooth'
-              typingIndicator={
-                isTyping ? (
-                  <TypingIndicator content='ChatGPT is typing' />
-                ) : null
-              }
-            >
-              {messages.map((message) => {
-                return (
-                  <Message
-                    key={message.message}
-                    model={message}
-                    className={`${quicksand.className}`}
-                  />
-                )
-              })}
-            </MessageList>
-            <MessageInput placeholder='Type message here' onSend={handleSend} />
-          </ChatContainer>
-        </MainContainer>
+        </button> */}
+        <div className='pt-[20px] rounded-md bg-transparent h-full'>
+          <MessageList messages={messages} />
+          <MessageInput
+            typingIndicator={isTyping}
+            placeholder='Type message here'
+            onSend={handleSend}
+          />
+        </div>
       </div>
     </div>
   )
