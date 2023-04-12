@@ -2,7 +2,6 @@ import { CreateCompletionRequest } from 'openai'
 import { useState, useRef } from 'react'
 import MessageList from '@/components/MessageList'
 import MessageInput from '@/components/MessageActionBox'
-import { SSE } from 'sse.js'
 
 interface ChatCompletionRequest extends CreateCompletionRequest {
   messages: {

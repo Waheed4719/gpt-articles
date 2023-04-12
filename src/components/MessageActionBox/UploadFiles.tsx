@@ -1,8 +1,6 @@
-import React, { useState, useRef } from 'react'
+import React from 'react'
 
-type Props = {}
-
-const UploadFiles = ({}: Props) => {
+const UploadFiles = () => {
   return (
     <button type='button' className='absolute left-[10px] flex text-white'>
       <svg
