@@ -1,7 +1,8 @@
 import { CreateCompletionRequest } from 'openai'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import MessageList from '@/components/MessageList'
-import MessageInput from '@/components/MessageInput'
+import MessageInput from '@/components/MessageActionBox'
+import { SSE } from 'sse.js'
 
 interface ChatCompletionRequest extends CreateCompletionRequest {
   messages: {
@@ -36,7 +37,8 @@ const App = () => {
     // "Explain things like you're talking to a medical professional with 5 years of experience.",
   })
   const [isTyping, setIsTyping] = useState(false)
-
+  const scrollToDiv = useRef<HTMLDivElement>(null)
+  const [typingAnswer, setTypingAnswer] = useState<string>('')
   const handleSend = async (message: string) => {
     const newMessage: MessageObjectType = {
       message,
@@ -53,7 +55,22 @@ const App = () => {
     setIsTyping(false)
   }
 
-  async function processMessageToChatGPT(chatMessages: MessageObjectType[]) {
+  const scrollToBottom = () => {
+    setTimeout(() => {
+      if (scrollToDiv.current === null) {
+        return
+      }
+      scrollToDiv.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+        inline: 'nearest',
+      })
+    }, 100)
+  }
+
+  const processMessageToChatGPT = async (chatMessages: MessageObjectType[]) => {
+    setIsTyping(true)
+
     const apiMessages = chatMessages.map((messageObject) => {
       let role = ''
       if (messageObject.sender === 'ChatGPT') {
@@ -63,7 +80,6 @@ const App = () => {
       }
       return { role: role, content: messageObject.message }
     })
-
     const apiRequestBody: ChatCompletionRequest = {
       model: 'gpt-3.5-turbo',
       messages: [
@@ -71,42 +87,54 @@ const App = () => {
         ...apiMessages, // The messages from our chat with ChatGPT
       ],
     }
-    try {
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        body: JSON.stringify(apiRequestBody),
-      }).then((data: Response) => {
-        return data.json()
-      })
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(apiRequestBody),
+    })
 
+    if (!response.ok) {
+      throw new Error(response.statusText)
+    }
+    const data = response.body
+    if (!data) {
+      return
+    }
+
+    const reader = data.getReader()
+    const decoder = new TextDecoder()
+    let done = false
+    let answer = ''
+    while (!done) {
+      const { value, done: doneReading } = await reader.read()
+      done = doneReading
+      const chunkValue = decoder.decode(value)
+      answer += chunkValue
+      setTypingAnswer((prev) => prev + chunkValue)
+      scrollToBottom()
+    }
+    if (done) {
       setMessages([
         ...chatMessages,
         {
-          message: response.choices[0].message.content as string,
+          message: answer,
           sender: 'ChatGPT',
           position: 'normal',
           direction: 'incoming',
         },
       ])
-    } catch (err) {
-      console.log(err)
+      setTypingAnswer('')
     }
-    setIsTyping(false)
   }
 
   return (
     <div className='w-screen h-screen'>
-      <div className='relative h-full w-full'>
-        {/* <button
-          type='button'
-          onClick={() =>
-            setSystemMsg({ role: 'system', content: 'talk like a teacher' })
-          }
-        >
-          Change prompt
-        </button> */}
+      <div className='relative w-full'>
         <div className='pt-[20px] rounded-md bg-transparent h-full'>
-          <MessageList messages={messages} />
+          <MessageList messages={messages} typingAnswer={typingAnswer} />
+          <div ref={scrollToDiv}></div>
           <MessageInput
             typingIndicator={isTyping}
             placeholder='Type message here'
