@@ -26,7 +26,7 @@ const MessageList = ({ messages, typingAnswer }: Props) => {
             {answer.split('```').map((item, index) => {
               if (index % 2 === 0) {
                 return (
-                  <p className='mb-[20px]' key={item[0]}>
+                  <p className='' key={item[0]}>
                     {item}
                   </p>
                 )
@@ -65,7 +65,7 @@ const MessageList = ({ messages, typingAnswer }: Props) => {
                     {message.message.split('```').map((item, index) => {
                       if (index % 2 === 0) {
                         return (
-                          <p className='mb-[20px]' key={item[0]}>
+                          <p className='' key={item[0]}>
                             {item}
                           </p>
                         )
