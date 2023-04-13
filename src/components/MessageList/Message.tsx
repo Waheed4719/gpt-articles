@@ -7,7 +7,6 @@ import MessageAuthor from './MessageAuthor'
 type Props = {
   message: MessageObjectType
 }
-const pattern = /```([^`]*)```/g
 
 const formatCode = (item: string, index: number) => {
   const delimiter = '\n'

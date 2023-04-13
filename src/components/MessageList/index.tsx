@@ -1,5 +1,5 @@
 import React from 'react'
-import Message from './MessageList/Message'
+import Message from './Message'
 import { MessageObjectType } from '@/types'
 
 type Props = {
