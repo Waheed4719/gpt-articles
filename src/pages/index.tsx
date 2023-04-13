@@ -1,7 +1,7 @@
 import { CreateCompletionRequest } from 'openai'
 import { useState, useRef } from 'react'
 import MessageList from '@/components/MessageList'
-import MessageInput from '@/components/MessageActionBox'
+import MessageActionBox from '@/components/MessageActionBox'
 
 interface ChatCompletionRequest extends CreateCompletionRequest {
   messages: {
@@ -129,12 +129,12 @@ const App = () => {
   }
 
   return (
-    <div className='w-screen h-screen'>
+    <div className=''>
       <div className='relative w-full'>
         <div className='pt-[20px] rounded-md bg-transparent h-full'>
           <MessageList messages={messages} typingAnswer={typingAnswer} />
           <div ref={scrollToDiv}></div>
-          <MessageInput
+          <MessageActionBox
             typingIndicator={isTyping}
             placeholder='Type message here'
             onSend={handleSend}

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import React from 'react'
 import SyntaxHighlighter from 'react-syntax-highlighter'
 import { dracula } from 'react-syntax-highlighter/dist/cjs/styles/hljs'
@@ -26,9 +27,13 @@ const MessageList = ({ messages, typingAnswer }: Props) => {
             {answer.split('```').map((item, index) => {
               if (index % 2 === 0) {
                 return (
-                  <p className='' key={item[0]}>
-                    {item}
-                  </p>
+                  <p
+                    className=''
+                    key={item[0]}
+                    dangerouslySetInnerHTML={{
+                      __html: item.replace(/\n/g, '<br/>'),
+                    }}
+                  />
                 )
               } else {
                 const delimiter = '\n'
@@ -36,12 +41,13 @@ const MessageList = ({ messages, typingAnswer }: Props) => {
                 const idx = item.indexOf(delimiter)
                 const language = item.substring(0, idx)
                 const code = item.substring(idx + 1)
+                console.log(language)
                 return (
                   <SyntaxHighlighter
                     key={index}
                     language={language ?? 'javascript'}
                     style={dracula}
-                    className='mb-[20px] p-[20px_!important] rounded-md'
+                    className='p-[20px_!important] rounded-md'
                   >
                     {code}
                   </SyntaxHighlighter>
@@ -65,9 +71,13 @@ const MessageList = ({ messages, typingAnswer }: Props) => {
                     {message.message.split('```').map((item, index) => {
                       if (index % 2 === 0) {
                         return (
-                          <p className='' key={item[0]}>
-                            {item}
-                          </p>
+                          <p
+                            className=''
+                            key={item[0]}
+                            dangerouslySetInnerHTML={{
+                              __html: item.replace(/\n/g, '<br/>'),
+                            }}
+                          />
                         )
                       } else {
                         const delimiter = '\n'
@@ -75,12 +85,13 @@ const MessageList = ({ messages, typingAnswer }: Props) => {
                         const idx = item.indexOf(delimiter)
                         const language = item.substring(0, idx)
                         const code = item.substring(idx + 1)
+                        console.log(language)
                         return (
                           <SyntaxHighlighter
                             key={index}
                             language={language ?? 'javascript'}
                             style={dracula}
-                            className='mb-[20px] p-[20px_!important] rounded-md'
+                            className=' p-[20px_!important] rounded-md'
                           >
                             {code}
                           </SyntaxHighlighter>

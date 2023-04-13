@@ -16,11 +16,11 @@ const MessageActionBox = ({ onSend, placeholder, typingIndicator }: Props) => {
   const handleMessageSend = () => {
     if (textInput !== '') {
       onSend(textInput)
-      setTextInput('')
       if (textAreaRef.current) {
         textAreaRef.current.style.height = `24px`
       }
     }
+    setTextInput('')
   }
   const handleInputChange = (val: string) => {
     setTextInput(val)

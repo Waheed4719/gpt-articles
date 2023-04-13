@@ -12,7 +12,7 @@ export const config = {
   runtime: 'edge',
 }
 
-const POST = async (req: Request): Promise<Response> => {
+const handler = async (req: Request): Promise<Response> => {
   const { messages } = (await req.json()) as {
     messages?: ChatGPTMessage[]
   }
@@ -31,4 +31,4 @@ const POST = async (req: Request): Promise<Response> => {
   const stream = await OpenAIStream(payload)
   return new Response(stream)
 }
-export default POST
+export default handler
