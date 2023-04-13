@@ -103,7 +103,6 @@ const App = () => {
         {
           message: answer,
           sender: 'ChatGPT',
-          position: 'normal',
           direction: 'incoming',
         },
       ])
