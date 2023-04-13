@@ -1,21 +1,7 @@
-import { CreateCompletionRequest } from 'openai'
+import { ChatCompletionRequest, MessageObjectType } from '@/types'
 import { useState, useRef } from 'react'
 import MessageList from '@/components/MessageList'
 import MessageActionBox from '@/components/MessageActionBox'
-
-interface ChatCompletionRequest extends CreateCompletionRequest {
-  messages: {
-    role: string
-    content: string
-  }[]
-}
-
-type MessageObjectType = {
-  message: string
-  direction: 'incoming' | 'outgoing' | 0 | 1
-  sender: 'ChatGPT' | 'user'
-  position: 'normal' | 'first' | 'last' | 'only'
-}
 
 const App = () => {
   const [messages, setMessages] = useState<MessageObjectType[]>([
@@ -23,8 +9,6 @@ const App = () => {
       message: "Hello, I'm ChatGPT! Ask me anything!",
       direction: 'incoming',
       sender: 'ChatGPT',
-      position: 'normal',
-      // sentTime: "just now",
     },
   ])
   const [systemMsg, setSystemMsg] = useState<{
@@ -42,8 +26,7 @@ const App = () => {
     const newMessage: MessageObjectType = {
       message,
       direction: 'outgoing',
-      sender: 'user',
-      position: 'normal',
+      sender: 'User',
     }
 
     const newMessages = [...messages, newMessage]

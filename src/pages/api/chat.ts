@@ -1,5 +1,5 @@
 import { OpenAIStream, OpenAIStreamPayload } from '@/utils/openAIStream'
-export type ChatGPTAgent = 'user' | 'system'
+export type ChatGPTAgent = 'User' | 'system'
 export interface ChatGPTMessage {
   role: ChatGPTAgent
   content: string
