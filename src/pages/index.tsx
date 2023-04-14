@@ -22,6 +22,7 @@ const App = () => {
   const [isTyping, setIsTyping] = useState(false)
   const scrollToDiv = useRef<HTMLDivElement>(null)
   const [typingAnswer, setTypingAnswer] = useState<string>('')
+
   const handleSend = async (message: string) => {
     const newMessage: MessageObjectType = {
       message,
@@ -33,6 +34,7 @@ const App = () => {
 
     setMessages(newMessages)
     setIsTyping(true)
+    scrollToBottom()
     await processMessageToChatGPT(newMessages)
     setIsTyping(false)
   }

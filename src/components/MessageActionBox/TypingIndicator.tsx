@@ -9,7 +9,7 @@ const TypingIndicator = ({ isTyping }: Props) => {
     return null
   }
   return (
-    <div className='w-full md:w-[800px] mx-auto text-[lightgray]'>
+    <div className='w-full md:w-[800px] mx-auto text-[lightgray] absolute -top-[38px]'>
       ChatGPT is typing...
     </div>
   )

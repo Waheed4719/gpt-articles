@@ -92,6 +92,7 @@
       {
         "selector": "default",
         "format": [
+          "snake_case",
           "camelCase",
           "PascalCase",
           "UPPER_CASE"
