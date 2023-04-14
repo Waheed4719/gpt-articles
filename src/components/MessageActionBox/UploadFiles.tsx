@@ -1,50 +1,12 @@
-import React, { FormEvent, useState, useEffect } from 'react'
-import pdfjsLib from 'pdfjs-dist'
+import React, { FormEvent, useState } from 'react'
 import Modal from '../Modal'
 import { AnimatePresence } from 'framer-motion'
 
 const UploadFiles = () => {
   const [showModal, setShowModal] = useState(false)
-  const [pdfText, setPdfText] = useState('')
 
-  useEffect(() => {
-    async function fetchData() {
-      console.log(pdfjsLib)
-      // const text = await loadPdfText()
-      // console.log(text)
-      // setPdfText(text)
-    }
-    fetchData()
-  }, [])
-  async function loadPdfText() {
-    // Load the PDF file using pdfjs-dist
-    const pdf = await pdfjsLib.getDocument('../../../public/files/resume.pdf')
-      .promise
-
-    // Get the number of pages in the PDF file
-    const { numPages } = pdf
-
-    // Loop through each page and extract its text
-    let text = ''
-    for (let i = 1; i <= numPages; i++) {
-      const page = await pdf.getPage(i)
-      const content = await page.getTextContent()
-      text += content.items.map((item) => item.str).join(' ')
-    }
-
-    return text
-  }
-
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
-    const formData = new FormData()
-    formData.append('myFile', e.target.elements.myFile.files[0])
-    const response = await fetch('/api/upload', {
-      method: 'POST',
-      body: formData,
-    })
-    console.log(response.json())
-    // Handle response
   }
 
   return (
