@@ -4,7 +4,7 @@ import { MessageObjectType } from '@/types'
 
 type Props = {
   messages: MessageObjectType[]
-  typingAnswer: string | null
+  typingAnswer?: string | null
 }
 
 const MessageList = ({ messages, typingAnswer }: Props) => {
@@ -15,12 +15,11 @@ const MessageList = ({ messages, typingAnswer }: Props) => {
     const answerObj = {
       sender: 'ChatGPT',
       message: answer,
-      direction: 'incoming',
     } as MessageObjectType
     return <Message message={answerObj} />
   }
   return (
-    <div className='smooth-scroll bg-transparent pb-[150px] '>
+    <div className='smooth-scroll bg-transparent pb-[150px] message-list'>
       {messages.map((message, index) => (
         <Message key={index} message={message} />
       ))}

@@ -1,10 +1,11 @@
 import React from 'react'
 
 type Props = {
+  isTyping: boolean
   onSend: () => void
 }
 
-const MessageSendBtn = ({ onSend }: Props) => {
+const MessageSendBtn = ({ onSend, isTyping }: Props) => {
   const handleMessageSend = () => {
     onSend()
   }
@@ -12,7 +13,8 @@ const MessageSendBtn = ({ onSend }: Props) => {
     <button
       type='button'
       onClick={handleMessageSend}
-      className='flex text-white absolute right-[10px]'
+      disabled={isTyping}
+      className='flex text-white absolute right-[10px] hover:text-gray-300 disabled:text-gray-500'
     >
       <svg
         xmlns='http://www.w3.org/2000/svg'

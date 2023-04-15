@@ -3,6 +3,13 @@ import SyntaxHighlighter from 'react-syntax-highlighter'
 import { dracula } from 'react-syntax-highlighter/dist/cjs/styles/hljs'
 import { MessageObjectType } from '@/types'
 import MessageAuthor from './MessageAuthor'
+import { ReactMarkdown } from 'react-markdown/lib/react-markdown'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
 
 type Props = {
   message: MessageObjectType
@@ -19,10 +26,13 @@ const formatCode = (item: string, index: number) => {
   const code = item.substring(idx + 1)
   return (
     <>
-      <div className='text-white flex items-center justify-between rounded-t-md h-[40px] bg-[#343541] px-[20px] py-2'>
-        <p className='text-[12px] font-semibold'>
+      <div
+        className='text-white flex items-center justify-between rounded-t-md h-[40px] bg-[#343541] px-[20px] py-2'
+        key={index}
+      >
+        <span className='text-[12px] font-semibold'>
           {formattedLanguage === '' ? 'Unknown language' : formattedLanguage}
-        </p>
+        </span>
         <button
           type='button'
           className='hover:text-gray-200 text-[12px] font-semibold flex items-center justify-center gap-2'
@@ -45,7 +55,6 @@ const formatCode = (item: string, index: number) => {
         </button>
       </div>
       <SyntaxHighlighter
-        key={index}
         language={language ?? 'javascript'}
         style={dracula}
         className=' p-[20px_!important] rounded-b-md'
@@ -63,22 +72,38 @@ const Message = ({ message }: Props) => {
         <div className='flex flex-col p-[20px]'>
           <div className='relative flex gap-4 rounded-xl w-full md:w-[800px] mx-auto mt-1'>
             <MessageAuthor sender='ChatGPT' />
-            <div className='text-sm text-white leading-[28px] flex flex-col flex-1 w-[calc(100%-80%)]'>
-              {message.message.split('```').map((item, index) => {
+            <div className='text-sm text-white leading-[28px] flex flex-col flex-1 w-[calc(100%-80%)] message'>
+              {console.log(message)}
+              {message.message?.split('```').map((item, index) => {
                 if (index % 2 === 0) {
-                  return (
-                    <p
-                      className='whitespace-pre-wrap'
-                      key={item[0]}
-                      dangerouslySetInnerHTML={{
-                        __html: item,
-                      }}
-                    />
-                  )
+                  return <ReactMarkdown key={item[0]}>{item}</ReactMarkdown>
                 } else {
                   return formatCode(item, index)
                 }
               })}
+              {message.sourceDocs && (
+                <div className='py-3'>
+                  <Accordion type='single' collapsible className='flex-col'>
+                    {message.sourceDocs.map((doc, index) => (
+                      <div key={`messageSourceDocs-${index}`}>
+                        <AccordionItem value={`item-${index}`}>
+                          <AccordionTrigger>
+                            <h3>Source {index + 1}</h3>
+                          </AccordionTrigger>
+                          <AccordionContent>
+                            <ReactMarkdown linkTarget='_blank'>
+                              {doc.pageContent}
+                            </ReactMarkdown>
+                            <p className='mt-2'>
+                              <b>Source:</b> {doc.metadata.source}
+                            </p>
+                          </AccordionContent>
+                        </AccordionItem>
+                      </div>
+                    ))}
+                  </Accordion>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -86,12 +111,10 @@ const Message = ({ message }: Props) => {
         <div className='flex flex-col  p-[20px] bg-[#343541]'>
           <div className='relative flex gap-3 rounded-xl w-full md:w-[800px]  mx-auto mt-1'>
             <MessageAuthor sender='User' />
-            <p
-              className='mb-4 text-sm text-white leading-[28px] whitespace-pre-wrap'
-              dangerouslySetInnerHTML={{
-                __html: message.message,
-              }}
-            />
+
+            <ReactMarkdown className='mb-4 text-sm text-white leading-[28px]'>
+              {message.message}
+            </ReactMarkdown>
           </div>
         </div>
       )}

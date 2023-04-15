@@ -2,12 +2,12 @@ import { ChatCompletionRequest, MessageObjectType } from '@/types'
 import { useState, useRef } from 'react'
 import MessageList from '@/components/MessageList'
 import MessageActionBox from '@/components/MessageActionBox'
+import Layout from '@/components/layout'
 
 const App = () => {
   const [messages, setMessages] = useState<MessageObjectType[]>([
     {
       message: "Hello, I'm ChatGPT! Ask me anything!",
-      direction: 'incoming',
       sender: 'ChatGPT',
     },
   ])
@@ -26,7 +26,6 @@ const App = () => {
   const handleSend = async (message: string) => {
     const newMessage: MessageObjectType = {
       message,
-      direction: 'outgoing',
       sender: 'User',
     }
 
@@ -105,7 +104,6 @@ const App = () => {
         {
           message: answer,
           sender: 'ChatGPT',
-          direction: 'incoming',
         },
       ])
       setTypingAnswer('')
@@ -113,7 +111,10 @@ const App = () => {
   }
 
   return (
-    <div className=''>
+    <Layout>
+      <h1 className='text-2xl font-bold leading-[1.1] tracking-tighter text-center text-white'>
+        Chat With ChatGPT
+      </h1>
       <div className='relative w-full'>
         <div className='pt-[20px] rounded-md bg-transparent h-full'>
           <MessageList messages={messages} typingAnswer={typingAnswer} />
@@ -125,7 +126,7 @@ const App = () => {
           />
         </div>
       </div>
-    </div>
+    </Layout>
   )
 }
 

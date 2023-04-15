@@ -1,4 +1,5 @@
 import { CreateCompletionRequest } from 'openai'
+import { Document } from 'langchain/document'
 
 export interface ChatCompletionRequest extends CreateCompletionRequest {
   messages: {
@@ -9,6 +10,7 @@ export interface ChatCompletionRequest extends CreateCompletionRequest {
 
 export type MessageObjectType = {
   message: string
-  direction: 'incoming' | 'outgoing'
   sender: 'ChatGPT' | 'User'
+  type?: 'apiMessage' | 'userMessage'
+  sourceDocs?: Document[]
 }
