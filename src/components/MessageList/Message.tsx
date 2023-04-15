@@ -72,7 +72,7 @@ const Message = ({ message }: Props) => {
         <div className='flex flex-col p-[20px]'>
           <div className='relative flex gap-4 rounded-xl w-full md:w-[800px] mx-auto mt-1'>
             <MessageAuthor sender='ChatGPT' />
-            <div className='text-sm text-white leading-[28px] flex flex-col flex-1 w-[calc(100%-80%)] message'>
+            <div className='text-md text-white leading-[28px] flex flex-col flex-1 w-[calc(100%-80%)] message'>
               {message.message?.split('```').map((item, index) => {
                 if (index % 2 === 0) {
                   return <ReactMarkdown key={item[0]}>{item}</ReactMarkdown>
@@ -111,7 +111,7 @@ const Message = ({ message }: Props) => {
           <div className='relative flex gap-3 rounded-xl w-full md:w-[800px]  mx-auto mt-1'>
             <MessageAuthor sender='User' />
 
-            <ReactMarkdown className='mb-4 text-sm text-white leading-[28px]'>
+            <ReactMarkdown className='mb-4 text-md text-white leading-[28px]'>
               {message.message}
             </ReactMarkdown>
           </div>

@@ -19,7 +19,7 @@ const MessageList = ({ messages, typingAnswer }: Props) => {
     return <Message message={answerObj} />
   }
   return (
-    <div className='smooth-scroll bg-transparent pb-[150px] message-list'>
+    <div className='smooth-scroll min-h-[55vh] bg-transparent pb-[150px] message-list'>
       {messages.map((message, index) => (
         <Message key={index} message={message} />
       ))}

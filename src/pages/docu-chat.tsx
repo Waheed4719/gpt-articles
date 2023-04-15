@@ -117,7 +117,7 @@ const DocuChat = () => {
               onSend={handleSubmit}
             />
             {error && (
-              <div className='border border-red-400 rounded-md p-4'>
+              <div className='border border-red-400 rounded-md p-4 md:w-[800px] mx-auto'>
                 <p className='text-red-500'>{error}</p>
               </div>
             )}
