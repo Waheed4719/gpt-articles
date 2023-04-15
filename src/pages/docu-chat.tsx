@@ -16,8 +16,7 @@ const DocuChat = () => {
   }>({
     messages: [
       {
-        message:
-          'Hi, what would you like to learn about this medical literature?',
+        message: 'Hi, what would you like to learn about?',
         sender: 'ChatGPT',
       },
     ],

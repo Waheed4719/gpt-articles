@@ -73,7 +73,6 @@ const Message = ({ message }: Props) => {
           <div className='relative flex gap-4 rounded-xl w-full md:w-[800px] mx-auto mt-1'>
             <MessageAuthor sender='ChatGPT' />
             <div className='text-sm text-white leading-[28px] flex flex-col flex-1 w-[calc(100%-80%)] message'>
-              {console.log(message)}
               {message.message?.split('```').map((item, index) => {
                 if (index % 2 === 0) {
                   return <ReactMarkdown key={item[0]}>{item}</ReactMarkdown>
