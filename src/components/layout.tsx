@@ -8,7 +8,7 @@ const Layout = ({ children }: LayoutProps) => {
     <div className='mx-auto flex flex-col space-y-4'>
       <header className='w-full sticky top-0 z-40 bg-[#444654]'>
         <div className='h-16  py-4'>
-          <nav className='ml-4 pl-6'>
+          <nav className='px-[20px]'>
             <Link
               href='/'
               className='text-white hover:text-[rgba(255,255,255,0.8)] cursor-pointer hover:border-b-2 border-white'
