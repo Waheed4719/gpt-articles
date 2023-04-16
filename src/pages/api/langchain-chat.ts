@@ -2,8 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai'
 import { PineconeStore } from 'langchain/vectorstores/pinecone'
 import { makeChain } from '@/utils/makechain'
-import { PineconeClient } from '@pinecone-database/pinecone'
-// import { pinecone } from '@/utils/pinecone-client'
+import { pinecone } from '@/utils/pinecone-client'
 import { PINECONE_INDEX_NAME, PINECONE_NAME_SPACE } from '@/config/pinecone'
 
 export default async function handler(
@@ -28,12 +27,6 @@ export default async function handler(
   const sanitizedQuestion = question.trim().replaceAll('\n', ' ')
 
   try {
-    const pinecone = new PineconeClient()
-
-    await pinecone.init({
-      environment: process.env.PINECONE_ENVIRONMENT ?? '', //this is in the dashboard
-      apiKey: process.env.PINECONE_API_KEY ?? '',
-    })
     const index = pinecone.Index(PINECONE_INDEX_NAME)
 
     /* create vectorstore*/
