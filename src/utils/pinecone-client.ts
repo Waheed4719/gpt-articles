@@ -16,7 +16,11 @@ const initPinecone = async () => {
     return pinecone
   } catch (error) {
     console.log('error', error)
-    throw new Error('Failed to initialize Pinecone Client')
+    throw new Error(
+      'Failed to initialize Pinecone Client',
+      process.env.PINECONE_ENVIRONMENT,
+      process.env.PINECONE_API_KEY
+    )
   }
 }
 
