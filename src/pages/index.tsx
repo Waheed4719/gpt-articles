@@ -79,7 +79,7 @@ const App = () => {
         body: JSON.stringify(apiRequestBody),
       })
       if (!response.ok) {
-        setError(response.statusText)
+        setError(response.statusText ?? 'An error occurred')
         return
       }
       const data = response.body
