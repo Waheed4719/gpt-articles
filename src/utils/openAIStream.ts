@@ -84,7 +84,7 @@ export async function OpenAIStream(payload: OpenAIStreamPayload) {
       }
     },
 
-    cancel() {
+    cancel(controller) {
       console.error('Stream cancelled or encountered an error')
       controller.error(new Error('Stream cancelled or encountered an error'))
     },
