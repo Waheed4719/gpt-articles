@@ -22,7 +22,7 @@ const App = () => {
   const [isTyping, setIsTyping] = useState(false)
   const scrollToDiv = useRef<HTMLDivElement>(null)
   const [typingAnswer, setTypingAnswer] = useState<string>('')
-
+  const [error, setError] = useState<string | null>(null)
   const handleSend = async (message: string) => {
     const newMessage: MessageObjectType = {
       message,
@@ -53,7 +53,7 @@ const App = () => {
 
   const processMessageToChatGPT = async (chatMessages: MessageObjectType[]) => {
     setIsTyping(true)
-
+    setError('')
     const apiMessages = chatMessages.map((messageObject) => {
       let role = ''
       if (messageObject.sender === 'ChatGPT') {
@@ -70,43 +70,47 @@ const App = () => {
         ...apiMessages, // The messages from our chat with ChatGPT
       ],
     }
-    const response = await fetch('/api/chat', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(apiRequestBody),
-    })
-
-    if (!response.ok) {
-      throw new Error(response.statusText)
-    }
-    const data = response.body
-    if (!data) {
-      return
-    }
-
-    const reader = data.getReader()
-    const decoder = new TextDecoder()
-    let done = false
-    let answer = ''
-    while (!done) {
-      const { value, done: doneReading } = await reader.read()
-      done = doneReading
-      const chunkValue = decoder.decode(value)
-      answer += chunkValue
-      setTypingAnswer((prev) => prev + chunkValue)
-      scrollToBottom()
-    }
-    if (done) {
-      setMessages([
-        ...chatMessages,
-        {
-          message: answer,
-          sender: 'ChatGPT',
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      ])
-      setTypingAnswer('')
+        body: JSON.stringify(apiRequestBody),
+      })
+      if (!response.ok) {
+        setError(response.statusText)
+        return
+      }
+      const data = response.body
+      if (!data) {
+        return
+      }
+
+      const reader = data.getReader()
+      const decoder = new TextDecoder()
+      let done = false
+      let answer = ''
+      while (!done) {
+        const { value, done: doneReading } = await reader.read()
+        done = doneReading
+        const chunkValue = decoder.decode(value)
+        answer += chunkValue
+        setTypingAnswer((prev) => prev + chunkValue)
+        scrollToBottom()
+      }
+      if (done) {
+        setMessages([
+          ...chatMessages,
+          {
+            message: answer,
+            sender: 'ChatGPT',
+          },
+        ])
+        setTypingAnswer('')
+      }
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -124,6 +128,11 @@ const App = () => {
             placeholder='Type message here'
             onSend={handleSend}
           />
+          {error && (
+            <div className='border border-red-400 rounded-md p-4 md:w-[800px] mx-auto'>
+              <p className='text-red-500'>{error}</p>
+            </div>
+          )}
         </div>
       </div>
     </Layout>

@@ -31,11 +31,22 @@ const DocuChat = () => {
   useEffect(() => {
     textAreaRef.current?.focus()
   }, [])
-
+  const scrollToBottom = () => {
+    setTimeout(() => {
+      if (scrollToDiv.current === null) {
+        return
+      }
+      scrollToDiv.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'end',
+        inline: 'nearest',
+      })
+    }, 100)
+  }
   //handle form submission
   async function handleSubmit(value: string) {
     // e.preventDefault()
-
+    scrollToBottom()
     setError(null)
 
     if (!value) {

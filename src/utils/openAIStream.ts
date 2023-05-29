@@ -26,17 +26,25 @@ export interface OpenAIStreamPayload {
 export async function OpenAIStream(payload: OpenAIStreamPayload) {
   const encoder = new TextEncoder()
   const decoder = new TextDecoder()
-
+  let res: any
   let counter = 0
-
-  const res = await fetch('https://api.openai.com/v1/chat/completions', {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${process.env.OPENAI_API_KEY ?? ''}`,
-    },
-    method: 'POST',
-    body: JSON.stringify(payload),
-  })
+  try {
+    res = await fetch('https://api.openai.com/v1/chat/completions', {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY ?? ''}`,
+      },
+      method: 'POST',
+      body: JSON.stringify(payload),
+    })
+    if (!res.ok) {
+      throw new Error(
+        `Failed to initiate the stream: ${res.status} ${res.statusText}`
+      )
+    }
+  } catch (error) {
+    throw new Error('Failed to initiate the stream')
+  }
 
   const stream = new ReadableStream({
     async start(controller) {
@@ -61,7 +69,8 @@ export async function OpenAIStream(payload: OpenAIStreamPayload) {
             counter++
           } catch (e) {
             // maybe parse error
-            controller.error(e)
+            console.error('Error reading stream:', e)
+            controller.error(new Error('Error reading stream'))
           }
         }
       }
@@ -70,9 +79,14 @@ export async function OpenAIStream(payload: OpenAIStreamPayload) {
       // this ensures we properly read chunks and invoke an event for each SSE event stream
       const parser = createParser(onParse)
       // https://web.dev/streams/#asynchronous-iteration
-      for await (const chunk of res.body as any) {
+      for await (const chunk of res.body) {
         parser.feed(decoder.decode(chunk))
       }
+    },
+
+    cancel() {
+      console.error('Stream cancelled or encountered an error')
+      controller.error(new Error('Stream cancelled or encountered an error'))
     },
   })
 

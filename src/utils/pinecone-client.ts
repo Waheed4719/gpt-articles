@@ -12,7 +12,6 @@ const initPinecone = async () => {
       environment: process.env.PINECONE_ENVIRONMENT ?? '', //this is in the dashboard
       apiKey: process.env.PINECONE_API_KEY ?? '',
     })
-    console.log(process.env.PINECONE_ENVIRONMENT, process.env.PINECONE_API_KEY)
     return pinecone
   } catch (error) {
     console.log('error', error)

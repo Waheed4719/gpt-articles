@@ -27,8 +27,11 @@ const handler = async (req: Request): Promise<Response> => {
     temperature: 0.7,
     stream: true,
   }
-
-  const stream = await OpenAIStream(payload)
-  return new Response(stream)
+  try {
+    const stream = await OpenAIStream(payload)
+    return new Response(stream)
+  } catch (error) {
+    return new Response('Error occurred while streaming', { status: 500 })
+  }
 }
 export default handler

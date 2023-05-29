@@ -45,6 +45,7 @@ export default async function handler(
     const response = await chain.call({
       question: sanitizedQuestion,
       chat_history: history || [],
+      stream: true,
     })
 
     console.log('response', response)

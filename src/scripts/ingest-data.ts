@@ -13,12 +13,13 @@ export const run = async () => {
   try {
     /*load raw docs from the all files in the directory */
     const directoryLoader = new DirectoryLoader(filePath, {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       '.pdf': (path) => new CustomPDFLoader(path),
     })
 
     // const loader = new PDFLoader(filePath);
     const rawDocs = await directoryLoader.load()
-
+    console.log('rawDocs', rawDocs)
     /* Split text into chunks */
     const textSplitter = new RecursiveCharacterTextSplitter({
       chunkSize: 1000,
@@ -31,8 +32,13 @@ export const run = async () => {
     console.log('creating vector store...')
     /*create and store the embeddings in the vectorStore*/
     const embeddings = new OpenAIEmbeddings()
-    const index = pinecone.Index(PINECONE_INDEX_NAME) //change to your own index name
 
+    const index = pinecone.Index(PINECONE_INDEX_NAME) //change to your own index name
+    // delete all existing vectors in the index using a specific namespace
+    await index.delete1({
+      deleteAll: true,
+      namespace: PINECONE_NAME_SPACE,
+    })
     //embed the PDF documents
     await PineconeStore.fromDocuments(docs, embeddings, {
       pineconeIndex: index,
@@ -44,7 +50,6 @@ export const run = async () => {
     throw new Error('Failed to ingest your data')
   }
 }
-
 ;(async () => {
   await run()
   console.log('ingestion complete')
