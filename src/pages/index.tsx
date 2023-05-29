@@ -79,8 +79,12 @@ const App = () => {
         body: JSON.stringify(apiRequestBody),
       })
       if (!response.ok) {
-        console.log(response.statusText ?? 'An error occurred')
-        setError(response.statusText ?? 'An error occurred')
+        console.log(
+          response.statusText !== '' ? response.statusText : 'An error occurred'
+        )
+        setError(
+          response.statusText !== '' ? response.statusText : 'An error occurred'
+        )
         return
       }
       const data = response.body
