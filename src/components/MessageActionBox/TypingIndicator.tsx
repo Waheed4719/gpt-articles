@@ -11,7 +11,7 @@ const TypingIndicator = ({ isTyping }: Props) => {
     return null
   }
   return (
-    <div className='w-full md:w-[800px] mx-auto text-[lightgray] absolute -top-[38px] flex gap-2 items-center'>
+    <div className='w-full md:w-[800px] mx-auto text-[lightgray] absolute -top-[38px] flex gap-2 items-center px-4'>
       <div className={`${styles.loadingwheel} items-center flex`}>
         <LoadingDots color='#fff' />
       </div>{' '}

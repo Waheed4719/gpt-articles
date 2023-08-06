@@ -29,7 +29,7 @@ const MessageActionBox = ({ onSend, placeholder, typingIndicator }: Props) => {
   return (
     <div className='w-full flex flex-col fixed bottom-[0px] h-[100px] bg-gradient-linear-fade  justify-start items-center gap-1'>
       <TypingIndicator isTyping={typingIndicator} />
-      <div className='absolute w-[calc(100vw-20px)]   bottom-[60px] px-[45px] py-2 md:py-3 md:pr-4 flex flex-col md:w-[800px] border border-black/10 border-gray-900/50 text-white bg-gray-700 rounded-md shadow-[0_0_10px_rgba(0,0,0,0.10)] dark:shadow-[0_0_15px_rgba(0,0,0,0.10)]'>
+      <div className='absolute w-[calc(100vw-40px)]   bottom-[60px] px-[45px] py-2 md:py-3 md:pr-4 flex flex-col md:w-[800px] border border-black/10 border-gray-900/50 text-white bg-gray-700 rounded-md shadow-[0_0_10px_rgba(0,0,0,0.10)] dark:shadow-[0_0_15px_rgba(0,0,0,0.10)]'>
         <UploadFiles />
         <MessageInput
           isTyping={typingIndicator}

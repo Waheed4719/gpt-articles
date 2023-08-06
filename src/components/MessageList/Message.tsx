@@ -108,7 +108,10 @@ const Message = ({ message }: Props) => {
         </div>
       ) : (
         <div className='flex flex-col  p-[20px] bg-[#343541]'>
-          <div className='relative flex gap-3 rounded-xl w-full md:w-[800px]  mx-auto mt-1'>
+          <div
+            className='relative grid gap-3 rounded-xl w-full md:w-[800px] mx-auto mt-1'
+            style={{ gridTemplateColumns: '35px 1fr' }}
+          >
             <MessageAuthor sender='User' />
 
             <ReactMarkdown className='mb-4 text-md text-white leading-[28px]'>

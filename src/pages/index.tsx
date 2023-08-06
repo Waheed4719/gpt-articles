@@ -74,11 +74,17 @@ const App = () => {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(apiRequestBody),
       })
       if (!response.ok) {
+        if (response.status === 429) {
+          setError('Open API Limit Reached.')
+          return
+        }
+
         setError(
           response.statusText !== '' ? response.statusText : 'An error occurred'
         )
@@ -131,7 +137,7 @@ const App = () => {
             onSend={handleSend}
           />
           {error && (
-            <div className='border border-red-400 rounded-md p-4 md:w-[800px] mx-auto'>
+            <div className='border border-red-400 rounded-md p-4 md:w-[800px] mx-4 md:mx-auto'>
               <p className='text-red-500'>{error}</p>
             </div>
           )}
